@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Tweet{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-body">
+        <h3 class="card-title">Edit Tweet</h3>
+
+        <!-- Messages -->
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            {{ form.content.label_tag }}
+            {{ form.content }}
+            {% if form.content.errors %}
+            <div class="text-danger">
+              {% for error in form.content.errors %}
+              <small>{{ error }}</small>
+              {% endfor %}
+            </div>
+            {% endif %}
+            <div class="form-text">
+              <span id="char-count">{{ form.content.value|length }}</span>/280 characters
+            </div>
+          </div>
+
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Update Tweet</button>
+            <a href="{% url 'tweet:home' %}" class="btn btn-secondary">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Character counter for edit form
+  document.getElementById('id_content')?.addEventListener('input', function () {
+    const count = this.value.length;
+    document.getElementById('char-count').textContent = count;
+
+    if (count > 250) {
+      document.getElementById('char-count').style.color = 'red';
+    } else {
+      document.getElementById('char-count').style.color = '';
+    }
+  });
+</script>
+{% endblock %}

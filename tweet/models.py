@@ -13,7 +13,7 @@ class Tweet(models.Model):
         ordering = ['-created_at']
     
     def __str__(self):
-        return f"{self.author.username}: {self.content[:50]}..."
+        return f"{self.author.username}: {self.content[:50]}..."  # type: ignore
     
     def total_likes(self):
-        return self.likes.count()
+        return self.likes.count()  # type: ignore

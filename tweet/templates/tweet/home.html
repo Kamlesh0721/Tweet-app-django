@@ -26,9 +26,15 @@
                     <form action="{% url 'tweet:home' %}" method="POST">
                         {% csrf_token %}
                         <div class="mb-3">
-                            <label for="tweet_content" class="form-label">What's happening?</label>
-                            <textarea class="form-control" id="tweet_content" name="tweet_content" rows="4"
-                                placeholder="Write your tweet here..." maxlength="280" required></textarea>
+                            {{ tweet_form.content.label_tag }}
+                            {{ tweet_form.content }}
+                            {% if tweet_form.content.errors %}
+                            <div class="text-danger">
+                                {% for error in tweet_form.content.errors %}
+                                <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
                             <div class="form-text">
                                 <span id="char-count">0</span>/280 characters
                             </div>
@@ -57,15 +63,17 @@
                                     </h6>
                                     <p class="card-text">{{ tweet.content }}</p>
                                 </div>
-                                {% if tweet.author == user %}
+                                {% if tweet.author == user or user.is_staff %}
                                 <div class="dropdown">
                                     <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
                                         data-bs-toggle="dropdown">
                                         ⋮
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Edit</a></li>
-                                        <li><a class="dropdown-item text-danger" href="#">Delete</a></li>
+                                        <li><a class="dropdown-item"
+                                                href="{% url 'tweet:edit_tweet' tweet.id %}">Edit</a></li>
+                                        <li><a class="dropdown-item text-danger"
+                                                href="{% url 'tweet:delete_tweet' tweet.id %}">Delete</a></li>
                                     </ul>
                                 </div>
                                 {% endif %}
